@@ -1,0 +1,58 @@
+.left-panel{
+  padding: 3%;
+}
+
+.site-title{
+  text-align: center;
+  color: #5294ff;
+  padding: 10px;
+}
+
+.site-icon{
+  font-size: 30px;
+}
+
+.page-title{
+  text-align: center;
+}
+
+.custom-label {
+  margin-top: 10px !important;
+}
+
+.custom-floating-label{
+  padding-left: 25px !important;
+}
+
+.header-icon{
+  font-size: 25px;
+}
+
+.text-blue {
+  color: #5294ff !important;
+}
+
+.text-blue:hover {
+  color: white !important;
+}
+
+.modal-body{
+  text-align: center;
+}
+
+.site-header-title{
+  padding-left: 16%;
+}
+
+.site-header-title a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.site-header-title a:hover{
+  color: white;
+}
+
+.developed-by{
+  font-size: 14px;
+}

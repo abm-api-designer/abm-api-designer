@@ -1,0 +1,11 @@
+#schemaPanel{
+  margin-left: 2%;
+}
+
+#paramPanel{
+  border-right: 1px solid #dee2e6;
+}
+
+.panel-title{
+  color: #6e6e6f;
+}

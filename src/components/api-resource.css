@@ -1,0 +1,20 @@
+.http-methods {
+  margin-left: 1% !important;
+}
+
+.http-methods button {
+  width: 18%;
+}
+
+.row-margin {
+  margin-top: 2% !important;
+}
+
+i{
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.input-notes{
+  font-size: 12px;
+}
