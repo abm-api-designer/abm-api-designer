@@ -1,20 +1,3 @@
-.main-container{
-  width: 100%;
-}
-
-#file-upload-input{
-  display: none;
-}
-
-.file-upload-icon{
-  font-size: 60px;
-}
-
-.standard-flow{
-  margin-top: 5% !important;
-  text-align: left;
-}
-
-.standard-flow  h6 {
-  color: #5294ff;
+.home-grid-item{
+    border: solid 1px gray;
 }
