@@ -1,0 +1,44 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Pet Broker",
+        "description": "Everything about Pets",
+        "version": "1.0.0",
+        "termsOfService": "http://www.onlinebooks.com",
+        "contact": {
+            "email": "apiteam@onlinebooks.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.com"
+        }
+    },
+    "paths": {},
+    "tags": [
+        {
+            "name": "pets",
+            "description": "Everything about managing books",
+            "externalDocs": {
+                "description": "More Details",
+                "url": "http://www.books.com"
+            }
+        }
+    ],
+    "servers": [
+        {
+            "description": "development",
+            "url": "http://dev.books.api",
+            "variables": {
+                "id": {
+                    "default": "123"
+                }
+            }
+        }
+    ],
+    "components": {
+        "schemas": {},
+        "requestBodies": {},
+        "responses": {},
+        "parameters": []
+    }
+}

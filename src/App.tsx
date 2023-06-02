@@ -7,8 +7,8 @@ import SwaggerDisplay from "./components/SwaggerDisplay";
 import HowToUse from "./components/HowToUse";
 import License from "./components/License";
 import TagsPage from "./components/TagsPage";
-import Servers from "./components/Server";
-import { Project, Tag } from "./models/SwaggerModels";
+import ServersPage from "./components/ServersPage";
+import { Project, Server, Tag } from "./models/SwaggerModels";
 import { createContext, useEffect, useState } from "react";
 
 export const initialTagState = {
@@ -17,8 +17,14 @@ export const initialTagState = {
   externalDocs: { url: "", description: "" },
 };
 
+export const initialServerState = {
+  description: "",
+  url: "",
+  variables: {},
+} as Server;
+
 export const initialState = {
-  openapi: "3.0.0",
+  openapi: "3.0.2",
   info: {
     title: "",
     description: "",
@@ -33,6 +39,7 @@ export const initialState = {
     },
   },
   tags: [] as Tag[],
+  servers: [] as Server[],
 } as Project;
 
 function loadFromLocalStorage(initialState: Project) {
@@ -104,14 +111,14 @@ function App() {
               }}
             >
               <Routes>
-                <Route path="/servers" element={<Servers />} />
+                <Route path="/servers" element={<ServersPage />} />
                 <Route path="/tags" element={<TagsPage />} />
                 <Route path="/license" element={<License />} />
                 <Route path="/project" element={<ProjectPage />} />
                 <Route path="/" element={<HowToUse />} />
               </Routes>
             </Grid>
-            <Grid item xs={7}>
+            <Grid item xs={7} sx={{ textAlign: "left" }}>
               <SwaggerDisplay />
             </Grid>
           </Grid>

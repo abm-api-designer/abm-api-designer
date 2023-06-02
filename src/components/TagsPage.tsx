@@ -1,7 +1,9 @@
 import { Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { initialTagState, ProjectContext } from "../App";
-import { addNew, Project } from "../models/SwaggerModels";
+import { Project } from "../models/SwaggerModels";
+import { addNew } from "../mappers/TagMapper";
+import ListDisplay from "./ListDisplay";
 
 export default function TagsPage() {
   const [selectedTagName, setSelectedTagName] = useState("");
@@ -83,7 +85,10 @@ export default function TagsPage() {
                     onChange={(e) => setExternalDocURL(e.currentTarget.value)}
                   ></TextField>
                 </Stack>
-                <Stack direction="row" spacing={30}>
+                <Stack
+                  alignSelf="flex-end"
+                  sx={{ paddingRight: "6%", width: "25%" }}
+                >
                   <Button
                     variant="contained"
                     onClick={() =>
@@ -93,21 +98,11 @@ export default function TagsPage() {
                     ADD
                   </Button>
                 </Stack>
-                <Typography variant="h6" color="secondary">
-                  Existing Tags
-                </Typography>
-                <Stack direction="column">
-                  {project.tags.map((tagItem) => (
-                    <Button
-                      key={tagItem.name}
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() => setSelectedTagName(tagItem.name)}
-                    >
-                      {tagItem.name}
-                    </Button>
-                  ))}
-                </Stack>
+                <ListDisplay
+                  title="Existing Tags"
+                  items={project.tags.map((item) => ({ name: item.name }))}
+                  onItemClick={(item) => setSelectedTagName(item.name)}
+                />
               </Stack>
             </form>
           </Paper>
