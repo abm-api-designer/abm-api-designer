@@ -147,10 +147,11 @@ export default function ServersPage() {
       mappedVars.push({
         default: variables[key].default,
         name: key,
-        type: "",
+        type: VariableType.STRING,
         description: variables[key].description,
       });
     });
+    return mappedVars;
   }
 
   return (
@@ -190,7 +191,7 @@ export default function ServersPage() {
                     fullWidth
                     label="URL"
                     placeholder="http://dev.swagger.io"
-                    value={currentServer.serverUrl}
+                    value={currentServer.url}
                     onChange={(e) => setServerUrl(e.currentTarget.value)}
                   ></TextField>
                 </Stack>
@@ -211,7 +212,7 @@ export default function ServersPage() {
                   </TableHead>
                   <TableBody>
                     {mapToDisplay(currentServer.variables).map(
-                      (item, index) => (
+                      (item: SimpleServerVariable, index: number) => (
                         <StyledTableRow key={"var-" + index}>
                           <StyledTableCell
                             component="th"
