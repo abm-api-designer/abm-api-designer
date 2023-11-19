@@ -1,6 +1,19 @@
-# Getting Started with Create React App
+# API Designer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The API Designer is simple, intuitive GUI tool for designing API specs for REST services. The API specs are converted into swagger. You can view the changes in Swagger GUI as you define the specs.
+
+## Specifications
+
+Below are the project key dependencies and specifications
+
+| Name         | Version  | Notes |
+| ------------ | -------- | ----- |
+| Node         | v18.15.0 |       |
+| MaterialUI   | 5.7.0    |       |
+| Typescript   | 4.6.4    |       |
+| ReactJS      | 18.1.0   |       |
+| ReduxToolkit |          |       |
+| Storybook    |          |       |
 
 ## Available Scripts
 
