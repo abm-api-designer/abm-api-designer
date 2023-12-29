@@ -1,5 +1,5 @@
-import { SimpleServerVariable } from "../components/ServersPage";
-import { Server } from "../models/SwaggerModels";
+import { SimpleServerVariable } from "../components/servers/ServerURLVariables";
+import { ServerEntity } from "../models/SwaggerModels";
 
 function updateMatchingItem(
   givenItem: SimpleServerVariable,
@@ -30,7 +30,7 @@ export function findAndReplace(
   return updatedVariables;
 }
 
-export function addServer(servers: Server[], newServer: Server) {
+export function addServer(servers: ServerEntity[], newServer: ServerEntity) {
   return servers.map((item) =>
     item.description === newServer.description ? newServer : item
   );

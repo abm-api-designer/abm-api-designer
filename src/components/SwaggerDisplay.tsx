@@ -1,15 +1,12 @@
 import SwaggerUI from "swagger-ui-react";
-import { ProjectContext } from "../App";
 import "swagger-ui-react/swagger-ui.css";
+import { useAppSelector } from "../data/hooks";
 
 export default function SwaggerDisplay() {
+  const project = useAppSelector((state) => state.project);
   return (
-    <ProjectContext.Consumer>
-      {({ project }) => (
-        <div>
-          <SwaggerUI spec={project} />
-        </div>
-      )}
-    </ProjectContext.Consumer>
+    <div>
+      <SwaggerUI spec={project} />
+    </div>
   );
 }

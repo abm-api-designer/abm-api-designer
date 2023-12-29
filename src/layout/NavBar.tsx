@@ -31,7 +31,7 @@ import {
 import { Link } from "react-router-dom";
 import { Tooltip } from "@mui/material";
 import { initialState, ProjectContext } from "../App";
-import { Project } from "../models/SwaggerModels";
+import { ProjectEntity } from "../models/SwaggerModels";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -257,7 +257,9 @@ export default function NavBar() {
     />
   );
 
-  function handleDeleteLocalStorage(setProject: (project: Project) => void) {
+  function handleDeleteLocalStorage(
+    setProject: (project: ProjectEntity) => void
+  ) {
     localStorage.clear();
     setProject(initialState);
   }

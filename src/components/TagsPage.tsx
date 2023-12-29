@@ -1,20 +1,32 @@
 import { Button, Paper, Stack, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { initialTagState, ProjectContext } from "../App";
-import { Project } from "../models/SwaggerModels";
+import { ProjectEntity } from "../models/SwaggerModels";
 import { addNew } from "../mappers/TagMapper";
 import ListDisplay from "./ListDisplay";
+import { useAppDispatch, useAppSelector } from "../data/hooks";
 
 export default function TagsPage() {
+  const dispatch = useAppDispatch();
+  const project = useAppSelector((state) => state.project.info);
+
   const [selectedTagName, setSelectedTagName] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [externalDocURL, setExternalDocURL] = useState("");
   const [externalDocDesc, setExternalDocDesc] = useState("");
 
+  useEffect(() => {
+    // setSelectedTagName(project.title);
+    // setDescription(project.description);
+    // setVersion(project.version);
+    // setTermsOfService(project.termsOfService);
+    // setContactEmail(project.contact.email);
+  }, []);
+
   function handleOnAdd(
-    project: Project,
-    setProject: (project: Project) => void,
+    project: ProjectEntity,
+    setProject: (project: ProjectEntity) => void,
     toggleProjectUpdated: () => void
   ) {
     addNew(project.tags, {

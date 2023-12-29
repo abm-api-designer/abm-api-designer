@@ -1,4 +1,4 @@
-import "./app.css";
+import "./App.css";
 import NavBar from "./layout/NavBar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProjectPage from "./components/ProjectPage";
@@ -8,7 +8,7 @@ import HowToUse from "./components/HowToUse";
 import License from "./components/License";
 import TagsPage from "./components/TagsPage";
 import ServersPage from "./components/ServersPage";
-import { Project, Server, Tag } from "./models/SwaggerModels";
+import { ProjectEntity, ServerEntity, Tag } from "./models/SwaggerModels";
 import { createContext, useEffect, useState } from "react";
 
 export const initialTagState = {
@@ -21,7 +21,7 @@ export const initialServerState = {
   description: "",
   url: "",
   variables: {},
-} as Server;
+} as ServerEntity;
 
 export const initialState = {
   openapi: "3.0.2",
@@ -39,10 +39,10 @@ export const initialState = {
     },
   },
   tags: [] as Tag[],
-  servers: [] as Server[],
-} as Project;
+  servers: [] as ServerEntity[],
+} as ProjectEntity;
 
-function loadFromLocalStorage(initialState: Project) {
+function loadFromLocalStorage(initialState: ProjectEntity) {
   let dataFromLocalStorage = initialState;
   if (typeof Storage !== "undefined") {
     let localDataAsString = localStorage.getItem("api-designer");
@@ -59,7 +59,7 @@ function loadFromLocalStorage(initialState: Project) {
 
 export const ProjectContext = createContext({
   project: initialState,
-  setProject: (project: Project) => {},
+  setProject: (project: ProjectEntity) => {},
   toggleProjectUpdated: () => {},
 });
 

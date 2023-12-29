@@ -1,29 +1,32 @@
-import { SimpleServerVariable } from "../components/ServersPage";
-import { Server } from "../models/SwaggerModels";
+import { SimpleServerVariable } from "../components/servers/ServerURLVariables";
+import { ServerEntity } from "../models/SwaggerModels";
 
-function ifSameServer(currentItem: Server, newItem: Server) {
+function ifSameServer(currentItem: ServerEntity, newItem: ServerEntity) {
   return currentItem.description === newItem.description;
 }
 function updateCurrentIfMatchesGivenServer(
-  currentItem: Server,
-  givenItemToCompare: Server
+  currentItem: ServerEntity,
+  givenItemToCompare: ServerEntity
 ) {
   if (ifSameServer(currentItem, givenItemToCompare)) {
     return givenItemToCompare;
   }
   return currentItem;
 }
-function serverExistsInArray(currentItems: Server[], newItem: Server) {
+function serverExistsInArray(
+  currentItems: ServerEntity[],
+  newItem: ServerEntity
+) {
   return currentItems.findIndex((item) => ifSameServer(item, newItem)) !== -1;
 }
-function updateExisting(current: Server[], newItem: Server) {
+function updateExisting(current: ServerEntity[], newItem: ServerEntity) {
   return current.map((item) =>
     updateCurrentIfMatchesGivenServer(item, newItem)
   );
 }
 
 // TODO Deprecated
-export function addNew(currentItems: Server[], newItem: Server) {
+export function addNew(currentItems: ServerEntity[], newItem: ServerEntity) {
   if (serverExistsInArray(currentItems, newItem)) {
     currentItems = updateExisting(currentItems, newItem);
   } else {

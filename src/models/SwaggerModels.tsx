@@ -1,17 +1,17 @@
-export interface Project {
+export interface ProjectEntity {
   openapi: string;
-  info: Info;
-  externalDocs: ExternalDocs;
-  servers: Server[];
+  info: InfoEntity;
+  externalDocs: ExternalDocsEntity;
+  servers: ServerEntity[];
   tags: Tag[];
 }
 
-export interface Info {
+export interface InfoEntity {
   title: string;
   description: string;
   termsOfService: string;
   contact: Contact;
-  license: License;
+  license: LicenseEntity;
   version: string;
 }
 
@@ -19,17 +19,17 @@ export interface Contact {
   email: string;
 }
 
-export interface License {
+export interface LicenseEntity {
   name: string;
   url: string;
 }
 
-export interface ExternalDocs {
+export interface ExternalDocsEntity {
   description: string;
   url: string;
 }
 
-export interface Server {
+export interface ServerEntity {
   description: string;
   url: string;
   variables: ServerVariableItem;
@@ -40,7 +40,7 @@ export interface ServerVariableItem {
 }
 
 export interface ServerVariable {
-  enum: string[];
+  enum?: string[];
   default: string;
   description: string;
 }
@@ -48,7 +48,7 @@ export interface ServerVariable {
 export interface Tag {
   name: string;
   description: string;
-  externalDocs: ExternalDocs;
+  externalDocs: ExternalDocsEntity;
 }
 
 export interface Path {
