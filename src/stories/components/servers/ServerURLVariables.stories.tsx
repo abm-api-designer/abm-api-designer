@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react";
 import ServerURLVariables, {
   SimpleServerVariable,
-  VariableType,
 } from "../../../components/servers/ServerURLVariables";
 import {
   ExistingVariablesMockedState,
@@ -16,6 +15,7 @@ import {
   assertServerVariables,
 } from "../../common/AssertionsCatalogue";
 import { expect } from "@storybook/jest";
+import { VariableType } from "../../../models/SwaggerModels";
 
 var variablesInput: SimpleServerVariable[] = [];
 

@@ -1,125 +1,122 @@
 import { Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { initialTagState, ProjectContext } from "../App";
-import { ProjectEntity } from "../models/SwaggerModels";
-import { addNew } from "../mappers/TagMapper";
 import ListDisplay from "./ListDisplay";
 import { useAppDispatch, useAppSelector } from "../data/hooks";
+import { addTag } from "../data/slices/projectSlice";
+import { Tag } from "../models/SwaggerModels";
+import CustomSnackBar from "./common/SnackBar";
 
 export default function TagsPage() {
   const dispatch = useAppDispatch();
-  const project = useAppSelector((state) => state.project.info);
+  const existingTags = useAppSelector((state) => state.project.tags);
 
   const [selectedTagName, setSelectedTagName] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [externalDocURL, setExternalDocURL] = useState("");
   const [externalDocDesc, setExternalDocDesc] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    // setSelectedTagName(project.title);
-    // setDescription(project.description);
-    // setVersion(project.version);
-    // setTermsOfService(project.termsOfService);
-    // setContactEmail(project.contact.email);
-  }, []);
+    if (selectedTagName) {
+      const foundTag = existingTags.find(
+        (item) => item.name === selectedTagName
+      );
+      if (foundTag) {
+        setName(foundTag.name);
+        setDescription(foundTag.description);
+        setExternalDocDesc(foundTag.externalDocs.description);
+        setExternalDocURL(foundTag.externalDocs.url);
+      }
+    }
+  }, [selectedTagName]);
 
-  function handleOnAdd(
-    project: ProjectEntity,
-    setProject: (project: ProjectEntity) => void,
-    toggleProjectUpdated: () => void
-  ) {
-    addNew(project.tags, {
+  const resetForm = () => {
+    setName("");
+    setDescription("");
+    setExternalDocDesc("");
+    setExternalDocURL("");
+    setSelectedTagName("");
+  };
+
+  const handleOnAdd = () => {
+    const newTag: Tag = {
       name,
-      description: description,
+      description,
       externalDocs: {
-        url: externalDocURL,
         description: externalDocDesc,
+        url: externalDocURL,
       },
-    });
-    setProject(project);
-    toggleProjectUpdated();
-  }
+    };
+    dispatch(addTag(newTag));
+    setMessage("Tag addedd succesfully");
+    resetForm();
+  };
 
   return (
-    <ProjectContext.Consumer>
-      {({ project, setProject, toggleProjectUpdated }) => {
-        let currentTag = project.tags.find(
-          (item) => item.name === selectedTagName
-        );
-        if (currentTag === undefined) {
-          currentTag = initialTagState;
-        }
-        return (
-          <Paper sx={{ padding: "5%", marginTop: "5%" }}>
-            <Typography variant="h5" color="#1976d2">
-              Create new Tag
-            </Typography>
-            <form>
-              <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
-                <Typography variant="h6">Basic Information</Typography>
-                <Stack direction="row" spacing={3}>
-                  <TextField
-                    sx={{ width: "50%" }}
-                    size="small"
-                    variant="outlined"
-                    label="Name"
-                    placeholder="Pet"
-                    value={name}
-                    onChange={(e) => setName(e.currentTarget.value)}
-                  />
-                  <TextField
-                    size="small"
-                    fullWidth
-                    label="Description"
-                    placeholder="Everything about Pet"
-                    value={description}
-                    onChange={(e) => setDescription(e.currentTarget.value)}
-                  ></TextField>
-                </Stack>
-                <Typography variant="h6">External Docs</Typography>
-                <Stack direction="row" spacing={3}>
-                  <TextField
-                    sx={{ width: "50%" }}
-                    size="small"
-                    variant="outlined"
-                    label="Description"
-                    placeholder="Find out more"
-                    value={externalDocDesc}
-                    onChange={(e) => setExternalDocDesc(e.currentTarget.value)}
-                  />
-                  <TextField
-                    size="small"
-                    fullWidth
-                    label="URL"
-                    placeholder="http://swagger.io"
-                    value={externalDocURL}
-                    onChange={(e) => setExternalDocURL(e.currentTarget.value)}
-                  ></TextField>
-                </Stack>
-                <Stack
-                  alignSelf="flex-end"
-                  sx={{ paddingRight: "6%", width: "25%" }}
-                >
-                  <Button
-                    variant="contained"
-                    onClick={() =>
-                      handleOnAdd(project, setProject, toggleProjectUpdated)
-                    }
-                  >
-                    ADD
-                  </Button>
-                </Stack>
-                <ListDisplay
-                  title="Existing Tags"
-                  items={project.tags.map((item) => ({ name: item.name }))}
-                  onItemClick={(item) => setSelectedTagName(item.name)}
-                />
-              </Stack>
-            </form>
-          </Paper>
-        );
-      }}
-    </ProjectContext.Consumer>
+    <Paper sx={{ padding: "5%", marginTop: "5%" }}>
+      <Typography variant="h5" color="#1976d2">
+        Create Tag
+      </Typography>
+      <form>
+        <Stack spacing={2} sx={{ alignItems: "flex-start" }}>
+          <Typography variant="h6">Basic Information</Typography>
+          <Stack direction="row" spacing={3}>
+            <TextField
+              sx={{ width: "50%" }}
+              size="small"
+              variant="outlined"
+              name="Name"
+              label="Name"
+              placeholder="Pet"
+              disabled={selectedTagName !== ""}
+              value={name}
+              onChange={(e) => setName(e.currentTarget.value)}
+            />
+            <TextField
+              size="small"
+              name="Description"
+              fullWidth
+              label="Description"
+              placeholder="Everything about Pet"
+              value={description}
+              onChange={(e) => setDescription(e.currentTarget.value)}
+            ></TextField>
+          </Stack>
+          <Typography variant="h6">External Docs</Typography>
+          <Stack direction="row" spacing={3}>
+            <TextField
+              sx={{ width: "50%" }}
+              name="External Docs Description"
+              size="small"
+              label="Description"
+              placeholder="Find out more"
+              value={externalDocDesc}
+              onChange={(e) => setExternalDocDesc(e.currentTarget.value)}
+            />
+            <TextField
+              size="small"
+              name="External Docs URL"
+              fullWidth
+              label="URL"
+              placeholder="http://swagger.io"
+              value={externalDocURL}
+              onChange={(e) => setExternalDocURL(e.currentTarget.value)}
+            ></TextField>
+          </Stack>
+          <Stack alignSelf="flex-end" sx={{ paddingRight: "6%", width: "25%" }}>
+            <Button onClick={handleOnAdd} variant="contained">
+              SAVE
+            </Button>
+          </Stack>
+          <ListDisplay
+            title="Existing Tags"
+            items={existingTags}
+            onItemClick={(item) => setSelectedTagName(item.name)}
+          />
+        </Stack>
+      </form>
+      <CustomSnackBar message={message} />
+    </Paper>
   );
 }

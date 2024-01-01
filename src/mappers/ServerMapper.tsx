@@ -1,5 +1,13 @@
-import { SimpleServerVariable } from "../components/servers/ServerURLVariables";
-import { ServerEntity } from "../models/SwaggerModels";
+import {
+  CsvString,
+  SimpleServerVariable,
+} from "../components/servers/ServerURLVariables";
+import {
+  ServerEntity,
+  ServerVariableItem,
+  VariableType,
+  getVariableType,
+} from "../models/SwaggerModels";
 
 function ifSameServer(currentItem: ServerEntity, newItem: ServerEntity) {
   return currentItem.description === newItem.description;
@@ -43,4 +51,103 @@ export function convert(source: SimpleServerVariable) {
   return {
     [source.name]: mappedVar,
   };
+}
+
+export function updateSelectedVaribleType(
+  variables: SimpleServerVariable[],
+  index: number,
+  value: string
+): SimpleServerVariable[] {
+  const mappedVar = getVariableType(value);
+  const updated: SimpleServerVariable[] = [];
+  for (var i = 0; i < variables.length; i++) {
+    const currentVar = variables[i];
+    if (i === index) {
+      if (mappedVar) {
+        currentVar.type = mappedVar;
+      }
+    }
+    updated.push(currentVar);
+  }
+  return updated;
+}
+
+export function mapServerVariablesToDisplay(variables: ServerVariableItem) {
+  var mappedVars = [] as SimpleServerVariable[];
+  Object.keys(variables).forEach((key) => {
+    let csvStringVal = undefined;
+    const item = variables[key];
+    const enumValues = item.enum;
+    let defaultValue = item.default;
+    if (enumValues != undefined) {
+      const csvDisplay = enumValues.join(",");
+      csvStringVal = new CsvString(csvDisplay);
+      defaultValue = csvDisplay;
+    }
+
+    mappedVars.push({
+      default: item.default,
+      name: key,
+      type: item.enum === undefined ? VariableType.STRING : VariableType.ENUM,
+      description: item.description,
+      values: csvStringVal,
+    });
+  });
+  return mappedVars;
+}
+
+export function updateNameForVariable(
+  variables: SimpleServerVariable[],
+  index: number,
+  value: string
+): SimpleServerVariable[] {
+  const updated: SimpleServerVariable[] = [];
+  variables.forEach((currentValue, currentIndex) => {
+    if (currentIndex === index) {
+      currentValue.name = value;
+    }
+    updated.push(currentValue);
+  });
+  return updated;
+}
+
+export function updateDefaultValue(
+  variables: SimpleServerVariable[],
+  index: number,
+  type: VariableType,
+  value: string
+) {
+  const mappedVar = getVariableType(type);
+  const updated: SimpleServerVariable[] = [];
+  for (var i = 0; i < variables.length; i++) {
+    const currentVar = variables[i];
+    if (i === index && mappedVar) {
+      switch (mappedVar) {
+        case VariableType.ENUM:
+          const csvStr = new CsvString(value);
+          currentVar.values = csvStr;
+          currentVar.default = csvStr.toArray()[0];
+          break;
+        case VariableType.STRING:
+          currentVar.default = value;
+          break;
+      }
+    }
+    updated.push(currentVar);
+  }
+  return updated;
+}
+
+export function deleteVariable(
+  variables: SimpleServerVariable[],
+  index: number
+) {
+  const updated: SimpleServerVariable[] = [];
+  for (let i = 0; i < variables.length; i++) {
+    if (i != index) {
+      const currentItem = variables[i];
+      updated.push(currentItem);
+    }
+  }
+  return updated;
 }

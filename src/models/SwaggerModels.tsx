@@ -54,3 +54,31 @@ export interface Tag {
 export interface Path {
   [url: string]: string;
 }
+
+export enum VariableType {
+  ENUM = "ENUM",
+  STRING = "STRING",
+}
+
+export function getVariableType(value: string): VariableType | undefined {
+  switch (value) {
+    case "ENUM":
+      return VariableType.ENUM;
+    case "STRING":
+      return VariableType.STRING;
+    default:
+      return undefined;
+  }
+}
+
+export function getVariableTypeFromIndex(
+  index: number
+): VariableType | undefined {
+  const enumValues: VariableType[] = Object.values(
+    VariableType
+  ) as VariableType[];
+  if (index > 0 && index < enumValues.length) {
+    return enumValues[index];
+  }
+  return undefined;
+}

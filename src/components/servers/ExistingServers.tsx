@@ -1,13 +1,35 @@
-import { useState } from "react";
-import ListDisplay from "../ListDisplay";
+import { useEffect, useState } from "react";
+import ListDisplay, { ListItem } from "../ListDisplay";
+import { ServerEntity } from "../../models/SwaggerModels";
 
-export const ExistingServers = () => {
-  const [selectedServerDesc, setSelectedServerDesc] = useState<string>();
+interface ExistingServersProps {
+  servers: ServerEntity[];
+  onSelection: (selectedServerDesc: string) => void;
+}
+
+export const ExistingServers = ({
+  servers,
+  onSelection,
+}: ExistingServersProps) => {
+  const [serverItems, setServerItems] = useState<ListItem[]>([]);
+
+  useEffect(() => {
+    if (servers.length > 0) {
+      const mapped: ListItem[] = servers.map((item) => {
+        const mappedElement = {
+          name: item.description,
+        } as ListItem;
+        return mappedElement;
+      });
+      setServerItems(mapped);
+    }
+  }, [servers]);
+
   return (
     <ListDisplay
       title="Existing Servers"
-      items={[]}
-      onItemClick={(item) => setSelectedServerDesc(item.name)}
+      items={serverItems}
+      onItemClick={(item) => onSelection(item.name)}
     />
   );
 };

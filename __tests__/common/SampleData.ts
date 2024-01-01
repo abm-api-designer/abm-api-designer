@@ -1,8 +1,8 @@
 import {
   CsvString,
   SimpleServerVariable,
-  VariableType,
 } from "../../src/components/servers/ServerURLVariables";
+import { VariableType } from "../../src/models/SwaggerModels";
 
 export const getSimpleStringServerVariable = (): SimpleServerVariable[] => {
   return [

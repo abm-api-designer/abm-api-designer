@@ -1,7 +1,4 @@
-import {
-  SimpleServerVariable,
-  VariableType,
-} from "../components/servers/ServerURLVariables";
+import { SimpleServerVariable } from "../components/servers/ServerURLVariables";
 import { ServerVariableItem } from "../models/SwaggerModels";
 
 export const convertToServerVariableItems = (

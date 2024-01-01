@@ -8,6 +8,7 @@ import {
   Tag,
 } from "../../models/SwaggerModels";
 import { ProjectInfoPayload } from "../payload/ProjectInfoPayload";
+import { addNew } from "../../mappers/TagMapper";
 
 export const initialState: ProjectEntity = {
   openapi: "3.0.2",
@@ -51,11 +52,23 @@ export const projectSlice = createSlice({
       state.info.contact.email = payload.contactEmail;
     },
     addServer: (state: ProjectEntity, action: PayloadAction<ServerEntity>) => {
-      state.servers.push(action.payload);
+      const foundIndex = state.servers.findIndex(
+        (item) => item.description === action.payload.description
+      );
+      if (foundIndex === -1) {
+        state.servers.push(action.payload);
+      } else {
+        state.servers[foundIndex] = action.payload;
+      }
+    },
+    addTag: (state: ProjectEntity, action: PayloadAction<Tag>) => {
+      const updatedTags = addNew(state.tags, action.payload);
+      state.tags = updatedTags;
     },
   },
 });
 
-export const { updateLicense, updateProject, addServer } = projectSlice.actions;
+export const { updateLicense, updateProject, addServer, addTag } =
+  projectSlice.actions;
 
 export default projectSlice.reducer;

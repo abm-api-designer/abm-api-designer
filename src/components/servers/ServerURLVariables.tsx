@@ -1,10 +1,6 @@
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import {
-  FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
   Table,
   TableBody,
   TableHead,
@@ -14,7 +10,15 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import { ServerVariableItem } from "../../models/SwaggerModels";
+import { ServerVariableItem, VariableType } from "../../models/SwaggerModels";
+import DefaultServerVariable from "./DefaultServerVariable";
+import {
+  deleteVariable,
+  updateDefaultValue,
+  updateNameForVariable,
+  updateSelectedVaribleType,
+} from "../../mappers/ServerMapper";
+import ServerVariableType from "../common/ServerVariableType";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -36,16 +40,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-export enum VariableType {
-  ENUM,
-  STRING,
-}
-
 export class CsvString {
   private value: string;
+
   constructor(value: string) {
     this.value = value;
   }
+
   public toArray() {
     return this.value.split(",");
   }
@@ -61,7 +62,7 @@ export interface SimpleServerVariable {
 
 const initVar = {
   name: "",
-  type: VariableType.STRING,
+  type: VariableType.ENUM,
   description: "",
   default: "",
 };
@@ -78,25 +79,34 @@ export default function ServerURLVariables({
   setVariables,
 }: ServerURLVariablesProps) {
   function addNewVar() {
-    setVariables([...variables, initVar]);
+    setVariables([...variables, { ...initVar }]);
   }
 
-  function mapToDisplay(variables: ServerVariableItem) {
-    var mappedVars = [] as SimpleServerVariable[];
-    Object.keys(variables).forEach((key) => {
-      mappedVars.push({
-        default: variables[key].default,
-        name: key,
-        type: VariableType.STRING,
-        description: variables[key].description,
-      });
-    });
-    return mappedVars;
-  }
+  const handleOnNameChange = (index: number, value: string) => {
+    const updated = updateNameForVariable(variables, index, value);
+    setVariables(updated);
+  };
 
-  const handleOnVariableTypeSelection = (index: number, value: string) => {
-    console.log(`Value : ${value}`);
-    console.log(`Index : ${index}`);
+  const handleOnVariableTypeSelection = (
+    index: number,
+    value: VariableType
+  ) => {
+    const updated = updateSelectedVaribleType(variables, index, value);
+    setVariables(updated);
+  };
+
+  const handleOnDefaultValueChange = (
+    index: number,
+    type: VariableType,
+    value: string
+  ) => {
+    const updated = updateDefaultValue(variables, index, type, value);
+    setVariables(updated);
+  };
+
+  const handleOnDelete = (index: number) => {
+    const updated = deleteVariable(variables, index);
+    setVariables(updated);
   };
 
   return (
@@ -125,51 +135,41 @@ export default function ServerURLVariables({
             <StyledTableRow data-testid="var-row" key={`var-row-${index}`}>
               <StyledTableCell component="th" scope="row" sx={{ width: "30%" }}>
                 <TextField
-                  data-testid={`var-name-${index}`}
+                  id={`var-name-${index}`}
+                  name={`var-name-${index}`}
                   size="small"
                   placeholder="Name"
+                  value={item.name}
+                  onChange={(e) =>
+                    handleOnNameChange(index, e.currentTarget.value)
+                  }
                 />
               </StyledTableCell>
-              <StyledTableCell sx={{ width: "25%" }}>
-                <FormControl fullWidth>
-                  <InputLabel id="variable-type-label">Type</InputLabel>
-                  <Select
-                    data-testid={`var-type-${index}`}
-                    labelId="variable-type-label"
-                    size="small"
-                    label="Type"
-                    value={item.type}
-                    onChange={(e) =>
-                      handleOnVariableTypeSelection(
-                        index,
-                        e.target.value as string
-                      )
-                    }
-                  >
-                    <MenuItem
-                      data-testid={`var-type-${index}-ENUM`}
-                      value="ENUM"
-                    >
-                      Enum
-                    </MenuItem>
-                    <MenuItem
-                      data-testid={`var-type-${index}-STRING`}
-                      value="STRING"
-                    >
-                      String
-                    </MenuItem>
-                  </Select>
-                </FormControl>
+              <StyledTableCell sx={{ width: "30%" }}>
+                <ServerVariableType
+                  key={index}
+                  itemIndex={index}
+                  initValue={item.type}
+                  onChange={(e) => handleOnVariableTypeSelection(index, e)}
+                />
+              </StyledTableCell>
+              <StyledTableCell sx={{ width: "30%" }}>
+                <DefaultServerVariable
+                  itemIndex={index}
+                  initValue={item.default}
+                  key={`default-var-${index}`}
+                  onChange={(e) =>
+                    handleOnDefaultValueChange(index, item.type, e)
+                  }
+                  type={item.type}
+                />
               </StyledTableCell>
               <StyledTableCell>
-                <TextField
-                  data-testid={`var-default-${index}`}
-                  size="small"
-                  placeholder="Default Val"
-                />
-              </StyledTableCell>
-              <StyledTableCell sx={{ width: "1%" }}>
-                <IconButton data-testid={`var-del-btn-${index}`} color="error">
+                <IconButton
+                  data-testid={`var-del-btn-${index}`}
+                  color="error"
+                  onClick={() => handleOnDelete(index)}
+                >
                   <RemoveCircle />
                 </IconButton>
               </StyledTableCell>
