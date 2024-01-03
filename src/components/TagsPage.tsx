@@ -9,7 +9,7 @@ import SaveIcon from "@mui/icons-material/Save";
 
 export default function TagsPage() {
   const dispatch = useAppDispatch();
-  const existingTags = useAppSelector((state) => state.project.tags);
+  const existingTags = useAppSelector((state) => state.tags);
 
   const [selectedTagName, setSelectedTagName] = useState("");
   const [name, setName] = useState("");
@@ -30,7 +30,7 @@ export default function TagsPage() {
         setExternalDocURL(foundTag.externalDocs.url);
       }
     }
-  }, [selectedTagName]);
+  }, [selectedTagName, existingTags]);
 
   const resetForm = () => {
     setName("");

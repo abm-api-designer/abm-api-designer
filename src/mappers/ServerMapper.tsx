@@ -78,15 +78,15 @@ export function mapServerVariablesToDisplay(variables: ServerVariableItem) {
     let csvStringVal = undefined;
     const item = variables[key];
     const enumValues = item.enum;
-    let defaultValue = item.default;
-    if (enumValues != undefined) {
+    let defaultValue: string = item.default;
+    if (enumValues !== undefined) {
       const csvDisplay = enumValues.join(",");
       csvStringVal = new CsvString(csvDisplay);
       defaultValue = csvDisplay;
     }
 
     mappedVars.push({
-      default: item.default,
+      default: defaultValue,
       name: key,
       type: item.enum === undefined ? VariableType.STRING : VariableType.ENUM,
       description: item.description,
@@ -144,7 +144,7 @@ export function deleteVariable(
 ) {
   const updated: SimpleServerVariable[] = [];
   for (let i = 0; i < variables.length; i++) {
-    if (i != index) {
+    if (i !== index) {
       const currentItem = variables[i];
       updated.push(currentItem);
     }

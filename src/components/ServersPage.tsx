@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "../data/hooks";
 import { addServer } from "../data/slices/projectSlice";
 import { convertToServerVariableItems } from "../converters/ServerVariableConverter";
 import { ExistingServers } from "./servers/ExistingServers";
-import { ServerEntity } from "../models/SwaggerModels";
 import { mapServerVariablesToDisplay } from "../mappers/ServerMapper";
 import SaveIcon from "@mui/icons-material/Save";
 
@@ -17,9 +16,9 @@ export default function ServersPage() {
   const [serverUrl, setServerUrl] = useState("");
   const [variables, setVariables] = useState<SimpleServerVariable[]>([]);
   const dispatch = useAppDispatch();
-  const savedServers = useAppSelector((state) => state.project.servers);
-  const [currentSelectedServer, setCurrentSelectedServer] =
-    useState<ServerEntity>();
+  const savedServers = useAppSelector((state) => state.servers);
+  // const [currentSelectedServer, setCurrentSelectedServer] =
+  //   useState<ServerEntity>();
 
   const [disableVarAdd, setDisableVarAdd] = useState(true);
 
@@ -29,17 +28,17 @@ export default function ServersPage() {
         (item) => item.description === selectedServerDesc
       );
       if (foundItem) {
-        setCurrentSelectedServer(foundItem);
+        // setCurrentSelectedServer(foundItem);
         setDescription(foundItem.description);
         setServerUrl(foundItem.url);
         const displayValue = mapServerVariablesToDisplay(foundItem.variables);
         setVariables(displayValue);
       }
     }
-  }, [selectedServerDesc]);
+  }, [selectedServerDesc, savedServers]);
 
   useEffect(() => {
-    setDisableVarAdd(serverUrl == undefined || serverUrl === "");
+    setDisableVarAdd(serverUrl === undefined || serverUrl === "");
   }, [serverUrl]);
 
   const resetForm = () => {

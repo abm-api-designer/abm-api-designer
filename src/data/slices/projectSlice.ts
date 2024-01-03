@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import {
-  InfoEntity,
   LicenseEntity,
   ProjectEntity,
   ServerEntity,
@@ -9,6 +8,8 @@ import {
 } from "../../models/SwaggerModels";
 import { ProjectInfoPayload } from "../payload/ProjectInfoPayload";
 import { addNew } from "../../mappers/TagMapper";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage/session"; // or 'redux-persist/lib/storage/local' for local storage
 
 export const initialState: ProjectEntity = {
   openapi: "3.0.2",
@@ -71,4 +72,12 @@ export const projectSlice = createSlice({
 export const { updateLicense, updateProject, addServer, addTag } =
   projectSlice.actions;
 
-export default projectSlice.reducer;
+export const persistedReducer = persistReducer(
+  {
+    key: "root",
+    storage,
+  },
+  projectSlice.reducer
+);
+
+export { persistReducer };

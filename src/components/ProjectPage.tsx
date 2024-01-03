@@ -7,7 +7,7 @@ import SaveIcon from "@mui/icons-material/Save";
 
 export default function ProjectPage() {
   const dispatch = useAppDispatch();
-  const project = useAppSelector((state) => state.project.info);
+  const project = useAppSelector((state) => state.info);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -23,7 +23,7 @@ export default function ProjectPage() {
     setVersion(project.version);
     setTermsOfService(project.termsOfService);
     setContactEmail(project.contact.email);
-  }, []);
+  }, [project]);
 
   const handleOnSave = () => {
     dispatch(

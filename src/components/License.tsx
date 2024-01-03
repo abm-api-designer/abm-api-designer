@@ -9,7 +9,7 @@ const License = () => {
   const [name, setName] = useState<string>();
   const [url, setUrl] = useState<string>();
 
-  const license = useAppSelector((state) => state.project.info.license);
+  const license = useAppSelector((state) => state.info.license);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

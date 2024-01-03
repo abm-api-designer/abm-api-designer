@@ -1,18 +1,28 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface ServerUrlVariableNameProps {
   index: number;
   onChange: (value: string) => void;
   variableNames: string[];
+  definedVarNames: string[];
 }
 
 export default function ServerUrlVariableName({
   variableNames,
+  definedVarNames,
   index,
   onChange,
 }: ServerUrlVariableNameProps) {
   const [currentValue, setCurrentValue] = useState<string>("");
+  const [values, setValues] = useState<string[]>(variableNames);
+
+  useEffect(() => {
+    const filteredValues = variableNames.filter(
+      (item) => definedVarNames.indexOf(item) === -1
+    );
+    setValues(filteredValues);
+  }, []);
 
   const handleOnChange = (value: string) => {
     setCurrentValue(value);
@@ -31,7 +41,7 @@ export default function ServerUrlVariableName({
         value={currentValue}
         onChange={(e) => handleOnChange(e.target.value)}
       >
-        {variableNames.map((item) => (
+        {values.map((item) => (
           <MenuItem key={`var-name-item-${item}`} value={item}>
             {item}
           </MenuItem>

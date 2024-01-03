@@ -5,13 +5,11 @@ import {
   TableBody,
   TableHead,
   TableRow,
-  TextField,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import { ServerVariableItem, VariableType } from "../../models/SwaggerModels";
+import { VariableType } from "../../models/SwaggerModels";
 import DefaultServerVariable from "./DefaultServerVariable";
 import {
   deleteVariable,
@@ -94,10 +92,7 @@ export default function ServerURLVariables({
   useEffect(() => {
     if (serverUrl) {
       const parsedParams = parseUrl(serverUrl);
-      const notDefinedVars = parsedParams.filter(
-        (item) => definedVarNames.indexOf(item) == -1
-      );
-      setVariableNames(notDefinedVars);
+      setVariableNames(parsedParams);
     }
   }, [serverUrl]);
 
@@ -112,7 +107,8 @@ export default function ServerURLVariables({
   const handleOnNameChange = (index: number, value: string) => {
     const updated = updateNameForVariable(variables, index, value);
     setVariables(updated);
-    setDefinedVarNames([...definedVarNames, value]);
+    const updatedVars = [...definedVarNames, value];
+    setDefinedVarNames(updatedVars);
   };
 
   const handleOnVariableTypeSelection = (
@@ -140,7 +136,7 @@ export default function ServerURLVariables({
   return (
     <div data-testid={testID}>
       <Typography textAlign="left" variant="h6">
-        URL Variables {disableVarAdd}
+        URL Variables
         <CustomTooltip
           title={
             disableVarAdd
@@ -175,6 +171,7 @@ export default function ServerURLVariables({
             <StyledTableRow data-testid="var-row" key={`var-row-${index}`}>
               <StyledTableCell component="th" scope="row" sx={{ width: "30%" }}>
                 <ServerUrlVariableName
+                  definedVarNames={definedVarNames}
                   variableNames={variableNames}
                   index={index}
                   onChange={(e) => handleOnNameChange(index, e)}

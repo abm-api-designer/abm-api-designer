@@ -1,5 +1,5 @@
 import { TextField } from "@mui/material";
-import { VariableType, getVariableType } from "../../models/SwaggerModels";
+import { VariableType } from "../../models/SwaggerModels";
 import { useState } from "react";
 
 interface DefaultServerVariableProps {
