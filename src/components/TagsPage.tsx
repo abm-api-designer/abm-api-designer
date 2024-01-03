@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../data/hooks";
 import { addTag } from "../data/slices/projectSlice";
 import { Tag } from "../models/SwaggerModels";
 import CustomSnackBar from "./common/SnackBar";
+import SaveIcon from "@mui/icons-material/Save";
 
 export default function TagsPage() {
   const dispatch = useAppDispatch();
@@ -66,7 +67,7 @@ export default function TagsPage() {
               sx={{ width: "50%" }}
               size="small"
               variant="outlined"
-              name="Name"
+              name="tagName"
               label="Name"
               placeholder="Pet"
               disabled={selectedTagName !== ""}
@@ -75,7 +76,7 @@ export default function TagsPage() {
             />
             <TextField
               size="small"
-              name="Description"
+              name="tagDescription"
               fullWidth
               label="Description"
               placeholder="Everything about Pet"
@@ -105,17 +106,21 @@ export default function TagsPage() {
             ></TextField>
           </Stack>
           <Stack alignSelf="flex-end" sx={{ paddingRight: "6%", width: "25%" }}>
-            <Button onClick={handleOnAdd} variant="contained">
+            <Button
+              onClick={handleOnAdd}
+              variant="contained"
+              startIcon={<SaveIcon />}
+            >
               SAVE
             </Button>
           </Stack>
-          <ListDisplay
-            title="Existing Tags"
-            items={existingTags}
-            onItemClick={(item) => setSelectedTagName(item.name)}
-          />
         </Stack>
       </form>
+      <ListDisplay
+        title="Existing Tags"
+        items={existingTags}
+        onItemClick={(item) => setSelectedTagName(item.name)}
+      />
       <CustomSnackBar message={message} />
     </Paper>
   );

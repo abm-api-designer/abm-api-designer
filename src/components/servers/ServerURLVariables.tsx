@@ -6,6 +6,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
@@ -19,6 +20,10 @@ import {
   updateSelectedVaribleType,
 } from "../../mappers/ServerMapper";
 import ServerVariableType from "../common/ServerVariableType";
+import CustomTooltip from "../common/CustomTooltip";
+import ServerUrlVariableName from "./ServerUrlVariableName";
+import { useEffect, useState } from "react";
+import { parseUrl } from "../../utils/UrlParser";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -71,13 +76,35 @@ export interface ServerURLVariablesProps {
   variables: SimpleServerVariable[];
   setVariables: React.Dispatch<React.SetStateAction<SimpleServerVariable[]>>;
   testID: string;
+  disableVarAdd: boolean;
+  serverUrl: string;
 }
 
 export default function ServerURLVariables({
   testID,
   variables,
   setVariables,
+  disableVarAdd,
+  serverUrl,
 }: ServerURLVariablesProps) {
+  const [definedVarNames, setDefinedVarNames] = useState<string[]>([]);
+  const [variableNames, setVariableNames] = useState<string[]>([]);
+  const [allVarsAreDefined, setAllVarsAreDefined] = useState(false);
+
+  useEffect(() => {
+    if (serverUrl) {
+      const parsedParams = parseUrl(serverUrl);
+      const notDefinedVars = parsedParams.filter(
+        (item) => definedVarNames.indexOf(item) == -1
+      );
+      setVariableNames(notDefinedVars);
+    }
+  }, [serverUrl]);
+
+  useEffect(() => {
+    setAllVarsAreDefined(variableNames.length === definedVarNames.length);
+  }, [definedVarNames, variableNames]);
+
   function addNewVar() {
     setVariables([...variables, { ...initVar }]);
   }
@@ -85,6 +112,7 @@ export default function ServerURLVariables({
   const handleOnNameChange = (index: number, value: string) => {
     const updated = updateNameForVariable(variables, index, value);
     setVariables(updated);
+    setDefinedVarNames([...definedVarNames, value]);
   };
 
   const handleOnVariableTypeSelection = (
@@ -112,15 +140,27 @@ export default function ServerURLVariables({
   return (
     <div data-testid={testID}>
       <Typography textAlign="left" variant="h6">
-        URL Variables{" "}
-        <IconButton
-          data-testid="add-new-var-btn"
-          onClick={addNewVar}
-          color="primary"
+        URL Variables {disableVarAdd}
+        <CustomTooltip
+          title={
+            disableVarAdd
+              ? "Please define server URL to contain a placeholder variables"
+              : allVarsAreDefined
+              ? "All variables are defined in the table below"
+              : "Add a variable"
+          }
         >
-          <AddCircle fontSize="small" />
-        </IconButton>
+          <IconButton
+            disabled={disableVarAdd || allVarsAreDefined}
+            data-testid="add-new-var-btn"
+            onClick={addNewVar}
+            color="primary"
+          >
+            <AddCircle fontSize="small" />
+          </IconButton>
+        </CustomTooltip>
       </Typography>
+
       <Table>
         <TableHead>
           <StyledTableRow>
@@ -134,15 +174,10 @@ export default function ServerURLVariables({
           {variables.map((item, index) => (
             <StyledTableRow data-testid="var-row" key={`var-row-${index}`}>
               <StyledTableCell component="th" scope="row" sx={{ width: "30%" }}>
-                <TextField
-                  id={`var-name-${index}`}
-                  name={`var-name-${index}`}
-                  size="small"
-                  placeholder="Name"
-                  value={item.name}
-                  onChange={(e) =>
-                    handleOnNameChange(index, e.currentTarget.value)
-                  }
+                <ServerUrlVariableName
+                  variableNames={variableNames}
+                  index={index}
+                  onChange={(e) => handleOnNameChange(index, e)}
                 />
               </StyledTableCell>
               <StyledTableCell sx={{ width: "30%" }}>

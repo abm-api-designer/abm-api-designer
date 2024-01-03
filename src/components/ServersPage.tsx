@@ -9,6 +9,7 @@ import { convertToServerVariableItems } from "../converters/ServerVariableConver
 import { ExistingServers } from "./servers/ExistingServers";
 import { ServerEntity } from "../models/SwaggerModels";
 import { mapServerVariablesToDisplay } from "../mappers/ServerMapper";
+import SaveIcon from "@mui/icons-material/Save";
 
 export default function ServersPage() {
   const [selectedServerDesc, setSelectedServerDesc] = useState("");
@@ -19,6 +20,8 @@ export default function ServersPage() {
   const savedServers = useAppSelector((state) => state.project.servers);
   const [currentSelectedServer, setCurrentSelectedServer] =
     useState<ServerEntity>();
+
+  const [disableVarAdd, setDisableVarAdd] = useState(true);
 
   useEffect(() => {
     if (selectedServerDesc && selectedServerDesc !== "") {
@@ -34,6 +37,10 @@ export default function ServersPage() {
       }
     }
   }, [selectedServerDesc]);
+
+  useEffect(() => {
+    setDisableVarAdd(serverUrl == undefined || serverUrl === "");
+  }, [serverUrl]);
 
   const resetForm = () => {
     setSelectedServerDesc("");
@@ -100,6 +107,8 @@ export default function ServersPage() {
             ></TextField>
           </Stack>
           <ServerURLVariables
+            serverUrl={serverUrl}
+            disableVarAdd={disableVarAdd}
             testID="server-vars-component"
             variables={variables}
             setVariables={setVariables}
@@ -110,6 +119,7 @@ export default function ServersPage() {
               onClick={handleOnSave}
               sx={{ width: "25%" }}
               variant="contained"
+              startIcon={<SaveIcon />}
             >
               SAVE
             </Button>
@@ -123,12 +133,12 @@ export default function ServersPage() {
               </Button>
             )}
           </Stack>
-          <ExistingServers
-            servers={savedServers}
-            onSelection={setSelectedServerDesc}
-          />
         </Stack>
       </form>
+      <ExistingServers
+        servers={savedServers}
+        onSelection={setSelectedServerDesc}
+      />
     </Paper>
   );
 }

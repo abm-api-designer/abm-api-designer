@@ -10,6 +10,7 @@ import TagsPage from "./components/TagsPage";
 import ServersPage from "./components/ServersPage";
 import { ProjectEntity, ServerEntity, Tag } from "./models/SwaggerModels";
 import { createContext, useEffect, useState } from "react";
+import ModelsPage from "./components/ModelsPage";
 
 export const initialTagState = {
   name: "",
@@ -111,6 +112,7 @@ function App() {
               }}
             >
               <Routes>
+                <Route path="/models" element={<ModelsPage />} />
                 <Route path="/servers" element={<ServersPage />} />
                 <Route path="/tags" element={<TagsPage />} />
                 <Route path="/license" element={<License />} />

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../data/hooks";
 import { updateLicense } from "../data/slices/projectSlice";
 import { LicenseEntity } from "../models/SwaggerModels";
+import SaveIcon from "@mui/icons-material/Save";
 
 const License = () => {
   const [name, setName] = useState<string>();
@@ -26,6 +27,7 @@ const License = () => {
       <form>
         <Stack spacing={2}>
           <TextField
+            name="license-name"
             inputProps={{
               "data-testid": "lic-name",
             }}
@@ -38,6 +40,7 @@ const License = () => {
             onChange={(e) => setName(e.currentTarget.value)}
           />
           <TextField
+            name="license-url"
             inputProps={{
               "data-testid": "lic-url",
             }}
@@ -48,13 +51,20 @@ const License = () => {
             value={url}
             onChange={(e) => setUrl(e.currentTarget.value)}
           ></TextField>
-          <Button
-            onClick={handleOnSave}
-            variant="contained"
-            sx={{ width: "20%" }}
+          <Stack
+            id="action-buttons"
+            direction="row"
+            spacing={1}
+            alignSelf={"end"}
           >
-            SAVE
-          </Button>
+            <Button
+              onClick={handleOnSave}
+              variant="contained"
+              startIcon={<SaveIcon />}
+            >
+              SAVE
+            </Button>
+          </Stack>
         </Stack>
       </form>
     </Paper>

@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "../data/hooks";
 import { useEffect, useState } from "react";
 import { updateProject } from "../data/slices/projectSlice";
 import CustomSnackBar from "./common/SnackBar";
+import SaveIcon from "@mui/icons-material/Save";
 
 export default function ProjectPage() {
   const dispatch = useAppDispatch();
@@ -24,14 +25,6 @@ export default function ProjectPage() {
     setContactEmail(project.contact.email);
   }, []);
 
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setVersion("");
-    setTermsOfService("");
-    setContactEmail("");
-  };
-
   const handleOnSave = () => {
     dispatch(
       updateProject({
@@ -43,7 +36,6 @@ export default function ProjectPage() {
       })
     );
     setMessage("Details saved successfully.");
-    resetForm();
   };
 
   return (
@@ -52,6 +44,7 @@ export default function ProjectPage() {
       <form>
         <Stack id="form-container" spacing={2}>
           <TextField
+            name="title"
             fullWidth
             inputProps={{
               "data-testid": "project-title",
@@ -63,6 +56,7 @@ export default function ProjectPage() {
             onChange={(e) => setTitle(e.currentTarget.value)}
           />
           <TextField
+            name="description"
             fullWidth
             multiline
             rows={4}
@@ -77,6 +71,7 @@ export default function ProjectPage() {
           ></TextField>
           <Stack direction="row" spacing={1}>
             <TextField
+              name="version"
               sx={{ width: "30%" }}
               inputProps={{
                 "data-testid": "project-version",
@@ -88,6 +83,7 @@ export default function ProjectPage() {
               onChange={(e) => setVersion(e.currentTarget.value)}
             />
             <TextField
+              name="termsOfService"
               inputProps={{
                 "data-testid": "project-tos",
               }}
@@ -100,6 +96,7 @@ export default function ProjectPage() {
             />
           </Stack>
           <TextField
+            name="contact"
             inputProps={{
               "data-testid": "project-contact",
             }}
@@ -116,13 +113,11 @@ export default function ProjectPage() {
             spacing={1}
             alignSelf={"end"}
           >
-            <Button data-testid="edit-btn" variant="contained">
-              EDIT
-            </Button>
             <Button
               data-testid="save-btn"
               variant="contained"
               onClick={handleOnSave}
+              startIcon={<SaveIcon />}
             >
               SAVE
             </Button>
